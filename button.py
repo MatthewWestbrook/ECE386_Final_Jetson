@@ -15,23 +15,62 @@
 # except KeyboardInterrupt:
 #     GPIO.cleanup()
 
+
+
+
+
+
+# import Jetson.GPIO as GPIO
+# import subprocess
+# import time
+
+# BUTTON_PIN = 29  # BOARD numbering
+
+# GPIO.setmode(GPIO.BOARD)
+# GPIO.setup(BUTTON_PIN, GPIO.IN)
+
+# def on_button_pressed():
+#     print("Button pressed! Triggering bash command...")
+#     subprocess.run("/home/ai/Desktop/ECE386_Final/crush.sh", shell=True, check=True)
+
+# GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=lambda pin: on_button_pressed(), bouncetime=300)
+
+# try:
+#     while True:
+#         time.sleep(0.1)
+# except KeyboardInterrupt:
+#     GPIO.cleanup()
+
+
+
+
 import Jetson.GPIO as GPIO
 import subprocess
 import time
 
 BUTTON_PIN = 29  # BOARD numbering
 
+# Setup GPIO
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(BUTTON_PIN, GPIO.IN)
 
 def on_button_pressed():
     print("Button pressed! Triggering bash command...")
-    subprocess.run(["bash", "/home/ai/Desktop/ECE386_Final/crush.sh"])
+    subprocess.run(["sudo","bash", "/home/ai/Desktop/ECE386_Final/crush.sh"], check=True)
+    #subprocess.run(["docker", "info"], check=True)
 
+# Set up falling edge detection with debounce
 GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=lambda pin: on_button_pressed(), bouncetime=300)
 
+# Keep the program alive
 try:
+    print("Waiting for button press. Press Ctrl+C to exit.")
     while True:
         time.sleep(0.1)
 except KeyboardInterrupt:
+    print("Exiting...")
     GPIO.cleanup()
+
+
+
+

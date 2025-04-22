@@ -1,5 +1,10 @@
 #!/bin/bash
 
-echo Hello $USER, this is a simple test
+# Source your bash profile to get full environment (especially needed if Docker is only available there)
+source ~/.bashrc
 
-tesd
+# Now run Docker normally
+docker run -it --rm --device=/dev/snd --runtime=nvidia --ipc=host -v huggingface:/huggingface/ whisper
+
+
+
