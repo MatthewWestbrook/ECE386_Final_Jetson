@@ -11,7 +11,6 @@ import Jetson.GPIO as GPIO
 import ollama
 
 
-
 LLM_MODEL: str = "gemma3:27b"  # Optional, change this to be the model you want
 OLLAMA_HOST = "http://ai.dfec.xyz:11434"  # Ollama server URL
 # Initialize the client
@@ -50,6 +49,7 @@ Do not say anything else, just say the response I am asking for.
 The prompt you will extract the location from is:
 """
 
+
 def record_audio(duration_seconds: int = 10) -> npt.NDArray:
     """Record duration_seconds of audio from default microphone.
     Return a single channel numpy array."""
@@ -58,10 +58,9 @@ def record_audio(duration_seconds: int = 10) -> npt.NDArray:
     audio = sd.rec(samples, samplerate=sample_rate, channels=1, dtype=np.float32)
     sd.wait()
     return np.squeeze(audio, axis=1)
-    
-def build_pipeline(
-    model_id: str, torch_dtype: torch.dtype, device: str
-) -> Pipeline:
+
+
+def build_pipeline(model_id: str, torch_dtype: torch.dtype, device: str) -> Pipeline:
     """Creates a Hugging Face automatic-speech-recognition pipeline on the given device."""
     model = AutoModelForSpeechSeq2Seq.from_pretrained(
         model_id,
@@ -82,15 +81,15 @@ def build_pipeline(
     )
     return pipe
 
+
 def llm_parse_for_wttr(prompt: str) -> str:
     """Uses the Ollama client to parse the prompt and extract the weather location."""
     response = client.chat(
-        model=LLM_MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        stream=False
+        model=LLM_MODEL, messages=[{"role": "user", "content": prompt}], stream=False
     )
-    
-    return response['message'].content.strip()
+
+    return response["message"].content.strip()
+
 
 def curl_result(Vectorized_Text: str):
     raw_input = LLM_prompt + Vectorized_Text
@@ -100,10 +99,11 @@ def curl_result(Vectorized_Text: str):
     except Exception as e:
         print("💥 ERROR:", e)
         return
-    print("About to curl the result: ",result)
-    command = ['curl', f'https://wttr.in/{result}']
+    print("About to curl the result: ", result)
+    command = ["curl", f"https://wttr.in/{result}"]
     result = subprocess.run(command, capture_output=True, text=True)
     print(result.stdout)
+
 
 def on_button_pressed():
     print("🔴 Button pressed! Starting recording...")
@@ -115,10 +115,11 @@ def on_button_pressed():
     speech = pipe(audio)
     end_time = time.time_ns()
     print("Done Transcribing")
-    
+
     curl_result(speech["text"])
 
     print("Waiting for button press. Press Ctrl+C to exit.")
+
 
 if __name__ == "__main__":
 
@@ -138,7 +139,12 @@ if __name__ == "__main__":
     # Setup GPIO
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=lambda pin: on_button_pressed(), bouncetime=1000)
+    GPIO.add_event_detect(
+        BUTTON_PIN,
+        GPIO.FALLING,
+        callback=lambda pin: on_button_pressed(),
+        bouncetime=1000,
+    )
 
     try:
         print("Waiting for button press. Press Ctrl+C to exit.")

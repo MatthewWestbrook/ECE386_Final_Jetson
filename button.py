@@ -16,10 +16,6 @@
 #     GPIO.cleanup()
 
 
-
-
-
-
 # import Jetson.GPIO as GPIO
 # import subprocess
 # import time
@@ -42,8 +38,6 @@
 #     GPIO.cleanup()
 
 
-
-
 import Jetson.GPIO as GPIO
 import subprocess
 import time
@@ -58,8 +52,8 @@ subprocess.run(["bash", "/home/ai/Desktop/ECE386_Final/hot_start.sh"], check=Tru
 
 # def on_button_pressed():
 #     print("Button pressed! Triggering bash command... depricated")
-    #subprocess.run(["bash", "/home/ai/Desktop/ECE386_Final/crush.sh"], check=True)
-    #subprocess.run(["docker", "info"], check=True)
+# subprocess.run(["bash", "/home/ai/Desktop/ECE386_Final/crush.sh"], check=True)
+# subprocess.run(["docker", "info"], check=True)
 
 # Set up falling edge detection with debounce
 # GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=lambda pin: on_button_pressed(), bouncetime=300)
@@ -73,7 +67,3 @@ try:
 except KeyboardInterrupt:
     print("Exiting...")
     GPIO.cleanup()
-
-
-
-
