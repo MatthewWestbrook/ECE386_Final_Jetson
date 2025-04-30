@@ -42,6 +42,7 @@ RUN pip install --upgrade --no-cache-dir pip && \
         sounddevice \
         ollama
 
+
 # Copy project files
 COPY speech_recognition.py .
 COPY hot_start.sh .
